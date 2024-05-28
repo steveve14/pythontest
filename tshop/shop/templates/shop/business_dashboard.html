@@ -21,14 +21,14 @@
         <div class="order-list">
             {% for order in orders %}
             <div class="order-item">
-                <p>Product: {{ order.product.product_name }}</p>
-                <p>Quantity: {{ order.quantity }}</p>
-                <p>Order Date: {{ order.order_date }}</p>
+                <p>제품명: {{ order.product.product_name }}</p>
+                <p>갯수: {{ order.quantity }}</p>
+                <p>주문일: {{ order.order_date }}</p>
             </div>
             {% endfor %}
         </div>
 
-        <h2>물건 목록</h2>
+        <h2>제품 목록</h2>
         <ul>
             {% for product in products %}
             <li>이름: {{ product.product_name }} - 가격: {{ product.price }} ₩ - 재고: {{ product.stock }}개</li>

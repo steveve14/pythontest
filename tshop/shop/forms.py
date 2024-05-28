@@ -1,5 +1,5 @@
 from django import forms
-from .models import Customer, Business, Product, Category
+from .models import Customer, Business, Product, Category, ProductCategory
 
 ##Customer 회원가입
 class CustomerSignupForm(forms.ModelForm):
@@ -44,3 +44,9 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['product_name', 'stock', 'price', 'categories']
+
+#Category
+class ProductCategory(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ['product', 'category']

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.utils import timezone
 from django.contrib import messages
-from .forms import CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm
+from .forms import CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm, ProductCategory
 from .models import Product, Cart, Order, Customer, Business, Category
 
 # 메인 페이지
@@ -56,6 +56,7 @@ def customer_login(request):
             messages.error(request, '비밀번호를 확인하세요.')
     return render(request, 'shop/customer_login.html', {'form': form})
 
+
 def business_login(request):
     form = BusinessLoginForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -107,14 +108,16 @@ def business_dashboard(request):
                 product.business = business
                 product.save()
                 # 선택된 카테고리들 저장
-                product.categories.set(product_form.cleaned_data['categories'])
-                messages.success(request, 'Product created successfully')
+                categories = product_form.cleaned_data.get('categories', None)
+                if categories:
+                    product.categories.set(categories)
+                messages.success(request, '제품이 성공적으로 생성되었습니다.')
                 return redirect('shop:business_dashboard')
         elif 'create_category' in request.POST:
             category_form = CategoryForm(request.POST)
             if category_form.is_valid():
                 category_form.save()
-                messages.success(request, 'Category created successfully')
+                messages.success(request, '카테고리가 성공적으로 생성되었습니다.')
                 return redirect('shop:business_dashboard')
     else:
         product_form = ProductForm()
@@ -128,6 +131,20 @@ def business_dashboard(request):
         'category_form': category_form
     }
     return render(request, 'shop/business_dashboard.html', context)
+
+# 제품에 카테고리 추가하는 뷰
+def add_category_to_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        form = ProductCategory(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '카테고리가 추가되었습니다.')
+            return redirect('shop:business_dashboard')
+    else:
+        form = AddCategoryToProductForm(instance=product)
+
+    return render(request, 'shop/add_category_to_product.html', {'form': form, 'product': product})
 
 #로그인 상태 확인을 위한 뷰
 def some_view(request):

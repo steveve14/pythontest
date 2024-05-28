@@ -13,20 +13,21 @@ class Order(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
 
-class Customer(models.Model):
-    name = models.CharField(max_length=45)
-    age = models.IntegerField()
-    phone_number = models.CharField(max_length=20)
-    user_id = models.CharField(max_length=45, unique=True)
-    password = models.CharField(max_length=128)
-
 class Address(models.Model):
     street_address = models.CharField(max_length=225)
     city = models.CharField(max_length=45)
     state = models.CharField(max_length=45)
     country = models.CharField(max_length=45)
     postal_code = models.CharField(max_length=20)
-    Customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.OneToOneField('Customer', related_name='address', on_delete=models.CASCADE)
+
+class Customer(models.Model):
+    name = models.CharField(max_length=45)
+    age = models.IntegerField()
+    phone_number = models.CharField(max_length=20)
+    user_id = models.CharField(max_length=45, unique=True)
+    password = models.CharField(max_length=128)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, primary_key=True)
 
 class Business(models.Model):
     business_name = models.CharField(max_length=45)
