@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Business_Login</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'shop:index' %}" style="text-decoration:none;color:white;">SHOP</a></h1>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                    {% if user.is_business %}
+                        <li><a href="{% url 'shop:business_logout' %}">로그아웃</a></li>
+                    {% else %}
+                        <li><a href="{% url 'shop:customer_logout' %}">로그아웃</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <h2>Business Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <footer>
+        <p>&copy; 2024 Tshop. All rights reserved.</p>
+    </footer>
+</body>
+</html>

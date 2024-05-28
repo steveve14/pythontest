@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SHOP</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'shop:index' %}" style="text-decoration:none;color:white;">SHOP</a></h1>
+        <nav>
+            <ul>
+                {% if is_customer_authenticated %}
+                    <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                    <li><a href="{% url 'shop:view_cart' %}">카트</a></li>
+                {% else %}
+                    {% if is_business_authenticated %}
+                        <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                        <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
+                        
+                    {% else %}
+                        <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                        <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                        <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                        <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
+                    {% endif %}
+                {% endif %}
+
+            </ul>
+        </nav>
+
+        <!-- <section> 미구현
+            <h3></h3>
+            <form method="get" action="{% url 'shop:search' %}">
+                <input type="text" name="q" placeholder="Search products">
+                <button type="submit">Search</button>
+            </form>
+        </section> -->
+    </header>
+    
+    <main>
+        <section>
+            <h2>Products</h2>
+            <div class="product-list">
+                {% for product in products %}
+                <div class="product-item">
+                    <h3>{{ product.product_name }}</h3>
+                    <p>가격: {{ product.price }}￦</p>
+                    <p>재고: {{ product.stock }}</p>
+                    {% if is_business_authenticated %}
+                    {% else %}
+                    <a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <pre>
+
+
+            </pre>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Tshop. All rights reserved.</p>
+    </footer>
+</body>
+</html>

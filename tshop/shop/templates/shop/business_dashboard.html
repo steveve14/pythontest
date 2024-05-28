@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'shop:index' %}">SHOP</a></h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>주문</h2>
+        <div class="order-list">
+            {% for order in orders %}
+            <div class="order-item">
+                <p>Product: {{ order.product.product_name }}</p>
+                <p>Quantity: {{ order.quantity }}</p>
+                <p>Order Date: {{ order.order_date }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>물건 목록</h2>
+        <ul>
+            {% for product in products %}
+            <li>이름: {{ product.product_name }} - 가격: {{ product.price }} ₩ - 재고: {{ product.stock }}개</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Create Product</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ product_form.as_p }}
+            <button type="submit" name="create_product">Create Product</button>
+        </form>
+
+        <h2>Create Category</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ category_form.as_p }}
+            <button type="submit" name="create_category">Create Category</button>
+            
+            <pre>
+
+
+            </pre>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Tshop. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>   
+    <title>Sign Up</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'shop:index' %}" style="text-decoration:none;color:white;">SHOP</a></h1>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                    {% if user.is_business %}
+                        <li><a href="{% url 'shop:business_logout' %}">로그아웃</a></li>
+                    {% else %}
+                        <li><a href="{% url 'shop:customer_logout' %}">로그아웃</a></li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                    <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- <section> 미구현
+            <h3></h3>
+            <form method="get" action="{% url 'shop:search' %}">
+                <input type="text" name="q" placeholder="Search products">
+                <button type="submit">Search</button>
+            </form>
+        </section> -->
+    </header>
+    
+    <h2>Sign Up</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>
