@@ -18,15 +18,18 @@ class BusinessSignupForm(forms.ModelForm):
     class Meta:
         model = Business
         fields = ['business_name', 'registration_number', 'email', 'password']
-    
+
+##Customer 로그인
 class CustomerLoginForm(forms.Form):
     user_id = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'User ID'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
+##Business 로그인
 class BusinessLoginForm(forms.Form):
     business_name = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Business Name'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
+#
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category

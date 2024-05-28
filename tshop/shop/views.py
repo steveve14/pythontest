@@ -88,21 +88,6 @@ def search(request):
     products = Product.objects.filter(product_name__icontains=query)
     return render(request, 'shop/search_results.html', {'products': products})
 
-
-
-# 체크아웃 뷰
-def checkout(request):
-    if request.method == 'POST':
-        cart_items = Cart.objects.filter(customer=request.user.customer, order_completed=False)
-        order = Order.objects.create(customer=request.user.customer)
-        for item in cart_items:
-            item.order_completed = True
-            item.order_time = timezone.now()
-            item.save()
-            order.products.add(item.product)
-        return render(request, 'shop/checkout_success.html', {'order': order})
-    return render(request, 'shop/checkout.html')
-
 #데쉬보드(비즈니스)
 def business_dashboard(request):
     business_id = request.session.get('business_id')
