@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.utils import timezone
 from django.contrib import messages
-from .forms import CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm, ProductCategory
-from .models import Product, Cart, Order, Customer, Business, Category
+from .forms import ProductCategoryForm, CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm, ProductCategoryForm
+from .models import Product, Cart, Order, Customer, Business, Category, ProductCategory
 
 # 메인 페이지
 def index(request):
@@ -99,6 +99,7 @@ def business_dashboard(request):
     orders = Order.objects.filter(product__business_id=business)
     products = Product.objects.filter(business_id=business)
     categories = Category.objects.all()
+    
 
     if request.method == 'POST':
         if 'create_product' in request.POST:
@@ -108,9 +109,6 @@ def business_dashboard(request):
                 product.business = business
                 product.save()
                 # 선택된 카테고리들 저장
-                categories = product_form.cleaned_data.get('categories', None)
-                if categories:
-                    product.categories.set(categories)
                 messages.success(request, '제품이 성공적으로 생성되었습니다.')
                 return redirect('shop:business_dashboard')
         elif 'create_category' in request.POST:
@@ -119,33 +117,30 @@ def business_dashboard(request):
                 category_form.save()
                 messages.success(request, '카테고리가 성공적으로 생성되었습니다.')
                 return redirect('shop:business_dashboard')
+            
+        elif 'product_category' in request.POST:
+            if 'product_category' in request.POST:
+                product_category_form = ProductCategoryForm(request.POST, business_id=business_id)
+                if product_category_form.is_valid():
+                    product_category_form.save()
+                    messages.success(request, '상품에 카테고리가 추가되었습니다.')
+                    return redirect('shop:business_dashboard')
+            
     else:
         product_form = ProductForm()
         category_form = CategoryForm()
+        product_category_form = ProductCategoryForm(business_id=business_id)
 
     context = {
         'orders': orders,
         'products': products,
         'categories': categories,
         'product_form': product_form,
-        'category_form': category_form
+        'category_form': category_form,
+        'product_category_form': product_category_form
     }
     return render(request, 'shop/business_dashboard.html', context)
-
-# 제품에 카테고리 추가하는 뷰
-def add_category_to_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    if request.method == 'POST':
-        form = ProductCategory(request.POST, instance=product)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '카테고리가 추가되었습니다.')
-            return redirect('shop:business_dashboard')
-    else:
-        form = AddCategoryToProductForm(instance=product)
-
-    return render(request, 'shop/add_category_to_product.html', {'form': form, 'product': product})
-
+    
 #로그인 상태 확인을 위한 뷰
 def some_view(request):
     context = {
@@ -171,32 +166,24 @@ def add_to_cart(request, product_id):
     messages.success(request, 'Product added to cart')
     return redirect('shop:view_cart')
 
-# 카트 삭제 뷰
-def remove_from_cart(request, product_id,  action):
-    if not request.session.get('customer_id', None):
-        return redirect('shop:customer_login')
-    
-    customer = get_object_or_404(Customer, user_id=request.user.id)
-    cart_item = get_object_or_404(Cart, product_id=product_id, customer=customer)
-    if cart_item.quantity > 1:
-        cart_item.quantity -= 1
-        cart_item.save()
-    else:
-        cart_item.delete()
-    return redirect('shop:cart_detail')
-# 카트 겟수 조절 뷰
+# 카트 겟수 조절,삭제 뷰
 def update_cart_quantity(request, cart_id, action):
     if not request.session.get('customer_id', None):
         return redirect('shop:customer_login')
     
     cart_item = get_object_or_404(Cart, id=cart_id)
+    
     if action == 'increase':
         cart_item.quantity += 1
+        cart_item.save()
     elif action == 'decrease':
         cart_item.quantity -= 1
         if cart_item.quantity <= 0:
             return redirect('shop:view_cart')
-    cart_item.save()
+        cart_item.save()
+    elif action == 'delete':
+        cart_item.delete()
+        
     return redirect('shop:view_cart')
 
 # 카트 보기 뷰
@@ -231,4 +218,4 @@ def purchase(request):
         item.delete()
 
     messages.success(request, 'Purchase completed successfully')
-    return redirect('shop:index')
+    return redirect('shop:view_cart')

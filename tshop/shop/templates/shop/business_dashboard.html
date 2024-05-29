@@ -32,22 +32,33 @@
         <ul>
             {% for product in products %}
             <li>이름: {{ product.product_name }} - 가격: {{ product.price }} ₩ - 재고: {{ product.stock }}개</li>
+            
             {% endfor %}
+
         </ul>
 
-        <h2>Create Product</h2>
+        <h2>제품 추가</h2>
         <form method="post">
             {% csrf_token %}
             {{ product_form.as_p }}
             <button type="submit" name="create_product">Create Product</button>
         </form>
 
-        <h2>Create Category</h2>
+        <h2>카테고리 추가</h2>
         <form method="post">
             {% csrf_token %}
             {{ category_form.as_p }}
             <button type="submit" name="create_category">Create Category</button>
-            
+        </form>
+
+        <h2>상품에 카테고리 추가</h2>
+        <form method="post" action="{% url 'shop:business_dashboard' %}">
+            {% csrf_token %}
+            {{ product_category_form.as_p }}
+            <button type="submit" name="product_category">카테고리 추가</button>
+        </form>
+        
+        </form> 
             <pre>
 
 

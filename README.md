@@ -1,4 +1,5 @@
 1. 파이썬 설치, mysql 설치
+## 파이썬 설치시 앞쪽에서 path 추가 체크
 
 ##cmd 로 실행
 2. pip install django
