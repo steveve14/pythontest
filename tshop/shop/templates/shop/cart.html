@@ -23,6 +23,28 @@
 
     <main>
         <section>
+            <h2>Current Address</h2>
+            {% if address %}
+                <p>Street Address: {{ address.street_address }}</p>
+                <p>City: {{ address.city }}</p>
+                <p>State: {{ address.state }}</p>
+                <p>Country: {{ address.country }}</p>
+                <p>Postal Code: {{ address.postal_code }}</p>
+            {% else %}
+                <p>No address available.</p>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2>Update Address</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ address_form.as_p }}
+                <button type="submit">Update Address</button>
+            </form>
+        </section>
+
+        <section>
             <h2>Your Cart</h2>
             <div class="cart-list">
                 {% for item in cart_items %}

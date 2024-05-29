@@ -8,7 +8,7 @@ class CustomerSignupForm(forms.ModelForm):
     state = forms.CharField(max_length=45, required=True)
     country = forms.CharField(max_length=45, required=True)
     postal_code = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = Customer
@@ -17,18 +17,17 @@ class CustomerSignupForm(forms.ModelForm):
     def save(self, commit=True):
         customer = super().save(commit=False)
         customer.password = self.cleaned_data['password']
+        # 주소 인스턴스 생성
+        address = Address(
+            street_address=self.cleaned_data['street_address'],
+            city=self.cleaned_data['city'],
+            state=self.cleaned_data['state'],
+            country=self.cleaned_data['country'],
+            postal_code=self.cleaned_data['postal_code']
+        )
+        address.save()  # 주소 저장
+        customer.address = address
         if commit:
-            customer.save()
-            address = Address(
-                street_address=self.cleaned_data['street_address'],
-                city=self.cleaned_data['city'],
-                state=self.cleaned_data['state'],
-                country=self.cleaned_data['country'],
-                postal_code=self.cleaned_data['postal_code'],
-                Customer_id=customer
-            )
-            address.save()
-            customer.address = address
             customer.save()
         return customer
     
@@ -78,3 +77,9 @@ class ProductCategoryForm(forms.ModelForm):
     class Meta:
         model = ProductCategory
         fields = ['product', 'category']
+
+##주소
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['street_address', 'city', 'state', 'country', 'postal_code']

@@ -31,8 +31,7 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=20)
     user_id = models.CharField(max_length=45, unique=True)
     password = models.CharField(max_length=128)
-    address = models.OneToOneField('Address', on_delete=models.CASCADE, null=True, blank=True, related_name='customer') 
-    ##장고에 OneToOneField는 1대1 구조를 구현하기위해 사용되는 코드 입니다
+    address = models.ForeignKey(Address, unique=True, on_delete=models.CASCADE)
 
 class Business(models.Model):
     business_name = models.CharField(max_length=45)

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import logout
 from django.utils import timezone
 from django.contrib import messages
-from .forms import ProductCategoryForm, CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm, ProductCategoryForm
-from .models import Product, Cart, Order, Customer, Business, Category, Address
+from .forms import ProductCategoryForm, CustomerLoginForm, BusinessLoginForm, CustomerSignupForm, BusinessSignupForm, ProductForm, CategoryForm, ProductCategoryForm, AddressForm
+from .models import Product, Cart, Order, Customer, Business, Category, ProductCategory
 
 # 메인 페이지
 def index(request):
@@ -98,8 +98,15 @@ def business_dashboard(request):
     business = Business.objects.get(id=business_id)
     orders = Order.objects.filter(product__business_id=business)
     products = Product.objects.filter(business_id=business)
+    product_categories = ProductCategory.objects.filter(product__in=products)
     categories = Category.objects.all()
     customer = Customer.objects.all()
+
+    product_categories_dict = {}
+    for pc in product_categories:
+        if pc.product.id not in product_categories_dict:
+            product_categories_dict[pc.product.id] = []
+        product_categories_dict[pc.product.id].append(pc.category.category_name)
     
 
     if request.method == 'POST':
@@ -140,7 +147,8 @@ def business_dashboard(request):
         'customer' : customer,
         'product_form': product_form,
         'category_form': category_form,
-        'product_category_form': product_category_form
+        'product_category_form': product_category_form,
+        'product_categories_dict': product_categories_dict,
     }
     return render(request, 'shop/business_dashboard.html', context)
     
@@ -200,9 +208,26 @@ def view_cart(request):
         return redirect('shop:customer_login')
     
     customer = get_object_or_404(Customer, id=customer_id)
+    address = customer.address
     cart_items = Cart.objects.filter(customer=customer)
     orders = Order.objects.filter(customer=customer)
-    return render(request, 'shop/cart.html', {'cart_items': cart_items, 'orders': orders})
+
+    address_form = AddressForm(instance=address)
+
+    if request.method == 'POST':
+        address_form = AddressForm(request.POST, instance=address)
+        if address_form.is_valid():
+            address_form.save()
+            messages.success(request, 'Address updated successfully.')
+            return redirect('shop:view_cart')
+
+    return render(request, 'shop/cart.html', {
+        'cart_items': cart_items,
+        'orders': orders,
+        'customer': customer,
+        'address': address,
+        'address_form': address_form,
+    })
 
 #구입
 def purchase(request):
