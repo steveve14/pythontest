@@ -12,6 +12,12 @@ class Order(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
     
+    def save(self, *args, **kwargs):
+        if not self.pk:  # 새로운 오더 생성 시 자동으로 재고 감소
+            self.product.stock -= self.quantity
+            self.product.save()
+        super(Order, self).save(*args, **kwargs)
+    
 class Address(models.Model):
     street_address = models.CharField(max_length=225)
     city = models.CharField(max_length=45)

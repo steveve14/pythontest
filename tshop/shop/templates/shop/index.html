@@ -41,7 +41,10 @@
                     <p>재고: {{ product.stock }}</p>
                     {% if is_business_authenticated %}
                     {% else %}
-                    <a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a>
+                        {% if product.stock <= 0%}
+                        {%else%}
+                            <a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a>
+                        {% endif %}
                     {% endif %}
                 </div>
                 {% endfor %}
