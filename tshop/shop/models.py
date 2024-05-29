@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password
 
 class Cart(models.Model):
     quantity = models.IntegerField(default=1)
