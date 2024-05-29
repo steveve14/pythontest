@@ -18,9 +18,10 @@
                             {% if request.session.customer_id %}
                                 <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
                             {% else %}
-                                <li><a href="{% url 'shop:customer_login' %}">Login</a></li>
-                                <li><a href="{% url 'shop:business_signup' %}">Business Signup</a></li>
-                                <li><a href="{% url 'shop:customer_signup' %}">Customer Signup</a></li>
+                                <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                                <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                                <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                                <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
                             {% endif %}
                         </ul>
                     </nav>
@@ -33,7 +34,7 @@
                 <section id="top" class="one dark cover">
                     <div class="container">
                         <header>
-                            <h2>Cart</h2>
+                            <h2>장바구니</h2>
                         </header>
                     </div>
                 </section>
@@ -41,10 +42,10 @@
                 <section id="portfolio" class="two">
                     <div class="container">
                         <header>
-                            <h2>주문 네역</h2>
+                            <h2>주문 내역</h2>
                         </header>
                         <div class="row">
-                            <div class="col-4 col-12-mobile">
+                            <div class="col-12 col-12-mobile">
                                 <div class="product-item">
                                     <article class="item">
                                         <header>
@@ -56,16 +57,15 @@
                                                 <a href="{% url 'shop:update_cart_quantity' item.id 'decrease' %}">-</a>
                                                 <a href="{% url 'shop:update_cart_quantity' item.id 'delete' %}">Remove</a>
                                             {% empty %}
-                                                
-                                        </header> 
-                                    </article>
-                                </div>
-                            </div>
-                            
+                                            <p>장바구니가 비어 있습니다.</p>
+                                            {% endfor %}
+                                        </header>                                         
+                                    </article>                                    
+                                </div>    
+                            </div>                      
                         </div>
                     </div>
-                                                <p>장바구니가 비어 있습니다.</p>
-                                            {% endfor %}
+
                     <form id="purchase-form" method="post" action="{% url 'shop:purchase' %}" onsubmit="return confirmPurchase();">
                         {% csrf_token %}
                         <button type="submit">Checkout</button>
@@ -81,14 +81,14 @@
                             <h2>주문 내역</h2>
                         </header>
                         <div class="row">
-                            <div class="col-4 col-12-mobile">
+                            <div class="col-12 col-12-mobile">
                                 <div class="product-item">
                                     <article class="item">
                                         <header>
                                             {% for order in orders %}
                                                 <h1 class="item-name">{{ order.product.product_name }}</h1>
                                                 <h3 class="item-quantity">개수: {{ order.quantity }}</h3>
-                                                <h3 class="order-date">주문 일: {{ order.order_date }}</h3>
+                                                <h3 class="order-date">주문 날자: {{ order.order_date }}</h3>
                                             {% empty %}
                                                 <p>주문이 비어 있습니다.</p>
                                             {% endfor %}
@@ -101,7 +101,7 @@
                     
                     <div class="container">
                         <header>
-                            <h2>현제 주소</h2>
+                            <h2>주소</h2>
                         </header>
                         <div class="row">
                             <div class="col-12 col-12-mobile">

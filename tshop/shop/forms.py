@@ -131,3 +131,10 @@ class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         fields = ['street_address', 'city', 'state', 'country', 'postal_code']
+        lable = {
+            'street_address' : '도로명 주소',
+            'city' : '도시',
+            'state' : '주', 
+            'country': '국가', 
+            'postal_code' : '우편번호'
+        }

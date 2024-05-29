@@ -21,7 +21,7 @@
                     {% else %}
                         {% if is_business_authenticated %}
                             <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
-                            <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
+                            <li><a href="{% url 'shop:business_dashboard' %}">대시보드</a></li>
                             
                         {% else %}
                             <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>

@@ -105,7 +105,7 @@ def search(request):
     products = Product.objects.filter(product_name__icontains=query)
     return render(request, 'shop/search_results.html', {'products': products})
 
-#데쉬보드(비즈니스)
+#대시보드(비즈니스)
 def business_dashboard(request):
     business_id = request.session.get('business_id')
     if not business_id:

@@ -44,15 +44,15 @@
                         <h2>주문 내역</h2>
                     </header>
                     <div class="row">
-                        <div class="col-4 col-12-mobile">
+                        <div class="col-12 col-12-mobile">
                             <div class="product-item">
                                 <article class="item">
                                     <header>
                                         {% for order in orders %}
                                             <h1>제품명: {{ order.product.product_name }}</h1>
-                                            <h3>갯수: {{ order.quantity }}</h3>
+                                            <h3>개수: {{ order.quantity }}</h3>
                                             <h3>주소: {{ order.customer.address.street_address }}, {{ order.customer.address.city }}, {{ order.customer.address.state }},{{ order.customer.address.country }}, {{ order.customer.address.postal_code }}</h3>  
-                                            <h3>주문일: {{ order.order_date }}</h3>
+                                            <h3>주문 날자: {{ order.order_date }}</h3>
                                         {% endfor %}
                                     </header> 
                                 </article>
@@ -66,7 +66,7 @@
                         <h2>재고</h2>
                     </header>
                     <div class="row">
-                        <div class="col-4 col-12-mobile">
+                        <div class="col-12 col-12-mobile">
                             <div class="product-item">
                                 <article class="item">
                                     <header>

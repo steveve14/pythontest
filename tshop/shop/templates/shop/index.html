@@ -18,12 +18,12 @@
                     <nav id="nav">
                         <ul>
                             {% if is_customer_authenticated %}
-                                <li><a href="{% url 'shop:view_cart' %}">카트</a></li>
+                                <li><a href="{% url 'shop:view_cart' %}">장바구니</a></li>
                                 <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
                             {% else %}
                                 {% if is_business_authenticated %}
                                     <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
-                                    <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
+                                    <li><a href="{% url 'shop:business_dashboard' %}">대시보드</a></li>
                                     
                                 {% else %}
                                     <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
@@ -81,7 +81,7 @@
                                                 {% else %}
                                                     {% if product.stock <= 0%}
                                                     {%else%}
-                                                    <h1><a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a></h1>
+                                                    <h1><a href="{% url 'shop:add_to_cart' product.id %}">장바구니 추가</a></h1>
                                                     {% endif %}
                                                 {% endif %}
                                             </header>
