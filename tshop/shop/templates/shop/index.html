@@ -31,6 +31,20 @@
     </header>
     
     <main>
+        <section class="category-list">
+            <h2>Categories</h2>
+            <ul>
+                <li class="category-item">
+                    <a href="{% url 'shop:index' %}">전체</a>
+                </li>
+                {% for category in categories %}
+                <li class="category-item">
+                    <a href="?category={{ category.id }}">{{ category.category_name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+
         <section>
             <h2>Products</h2>
             <div class="product-list">

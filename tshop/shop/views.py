@@ -7,8 +7,24 @@ from .models import Product, Cart, Order, Customer, Business, Category, ProductC
 
 # 메인 페이지
 def index(request):
-    products = Product.objects.all()
-    return render(request, 'shop/index.html', {'products': products})
+    categories = Category.objects.all()
+    selected_category = request.GET.get('category', None)
+    if selected_category:
+        category = get_object_or_404(Category, id=selected_category)
+        product_categories = ProductCategory.objects.filter(category=category)
+        products = [pc.product for pc in product_categories]
+    else:
+        products = Product.objects.all()
+    
+    return render(request, 'shop/index.html', {
+        'categories': categories,
+        'products': products,
+    })
+
+
+
+
+
 
 # 회원가입 뷰
 def customer_signup(request):

@@ -53,11 +53,32 @@ class CustomerSignupForm(forms.ModelForm):
     
 ##Business 회원가입
 class BusinessSignupForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}), label='비밀번호')
+    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}), label='비밀번호 확인')
 
     class Meta:
         model = Business
         fields = ['business_name', 'registration_number', 'email', 'password']
+        labels = {
+            'business_name' : '회사명',
+            'registration_number' : '사업자 번호',
+            'email': '이메일',
+        }
+        attrs = {
+            'business_name' : '회사명',
+            'registration_number' : '사업자 번호',
+            'email': '이메일',
+        }
+
+        def clean(self):
+            cleaned_data = super().clean()
+            password = cleaned_data.get('password')
+            password_confirm = cleaned_data.get('password_confirm')
+
+            # 비밀번호와 비밀번호 확인이 일치하지 않는 경우
+            if password and password_confirm and password != password_confirm:
+                raise forms.ValidationError({'password_confirm': "비밀번호가 일치하지 않습니다."})
+            return cleaned_data
 
 ##Customer 로그인
 class CustomerLoginForm(forms.Form):
