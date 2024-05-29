@@ -1,85 +1,140 @@
 <!DOCTYPE html>
 <html lang="kr">
-<head>
-    <meta charset="UTF-8">
-    <title>Business Dashboard</title>
-    {% load static %}
-    {% load custom_filters %}
-    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'shop:index' %}">SHOP</a></h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
-            </ul>
-        </nav>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <title>Business Dashboard</title>
+        {% load static %}
+        {% load custom_filters %}
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+    </head>
 
-    <main>
-        <h2>주문</h2>
-        <div class="order-list">
-            {% for order in orders %}
-            <div class="order-item">
-                <p>제품명: {{ order.product.product_name }}</p>
-                <p>갯수: {{ order.quantity }}</p>
-                <p>주문일: {{ order.order_date }}</p>
-
-                <div class="customer-address">
-                    <p>주소:</p>
-                    <p>{{ order.customer.address.street_address }}</p>
-                    <p>{{ order.customer.address.city }}, {{ order.customer.address.state }}</p>
-                    <p>{{ order.customer.address.country }}, {{ order.customer.address.postal_code }}</p>
+    <body>
+        <div id="header">
+            <div class="top">
+                <!-- Logo -->
+                    <div id="logo">
+                        <h1><a href="{% url 'shop:index' %}" id = 'logo'>SHOP</a></h1>
+                    </div>
+                <!-- Nav -->
+                    <nav id="nav">
+                        <ul>
+                            {% if request.session.business_id %}
+                                <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                            {% else %}
+                            {% endif %}
+                        </ul>
+                    </nav>
+                <!--NavEND-->
+            </div>
+        </div>
+        
+        <div id="main">
+            <!-- Intro -->
+                <section id="top" class="one dark cover">
+                    <div class="container">
+                        <header>
+                            <h2>판매관리</h2>
+                        </header>
+                    </div>
+                </section>
+            <!-- Portfolio -->
+            <section id="portfolio" class="two">
+                <div class="container">
+                    <header>
+                        <h2>주문 네역</h2>
+                    </header>
+                    <div class="row">
+                        <div class="col-4 col-12-mobile">
+                            <div class="product-item">
+                                <article class="item">
+                                    <header>
+                                        {% for order in orders %}
+                                            <h1>제품명: {{ order.product.product_name }}</h1>
+                                            <h3>갯수: {{ order.quantity }}</h3>
+                                            <h3>주소: {{ order.customer.address.street_address }}, {{ order.customer.address.city }}, {{ order.customer.address.state }},{{ order.customer.address.country }}, {{ order.customer.address.postal_code }}</h3>  
+                                            <h3>주문일: {{ order.order_date }}</h3>
+                                        {% endfor %}
+                                    </header> 
+                                </article>
+                            </div>
+                        </div>  
+                    </div>
                 </div>
 
-            </div>
-            {% endfor %}
+                <div class="container">
+                    <header>
+                        <h2>재고</h2>
+                    </header>
+                    <div class="row">
+                        <div class="col-4 col-12-mobile">
+                            <div class="product-item">
+                                <article class="item">
+                                    <header>
+                                        {% for product in products %}
+                                            <h1>이름: {{ product.product_name }}</h1>
+                                            <h3>가격: {{ product.price }} ₩</h3>  
+                                            <h3>재고: {{ product.stock }}개</h3>
+                                            <li>카테고리: 
+                                            {% with product_categories_dict|get_item:product.id as categories %}
+                                                {{ categories|join:", " }}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </header>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section id="portfolio" class="two">
+                    <div class="container">
+                        <header>
+                            <h2>제품 추가</h2>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ product_form.as_p }}
+                                <button type="submit" name="create_product">제품 추가</button>
+                            </form>
+                        </header>
+                    </div>
+                </section>
+
+                <section id="portfolio" class="two">
+                    <div class="container">
+                        <header>
+                            <h2>카테고리 추가</h2>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ category_form.as_p }}
+                                <button type="submit" name="create_category">카테고리 생성</button>
+                            </form>
+                        </header>
+                    </div>
+                </section>
+
+                <section id="portfolio" class="two">
+                    <div class="container">
+                        <header>
+                            <h2>상품에 카테고리 추가</h2>
+                            <form method="post" action="{% url 'shop:business_dashboard' %}">
+                                {% csrf_token %}
+                                {{ product_category_form.as_p }}
+                                <button type="submit" name="product_category">카테고리 설정</button>
+                            </form>
+                        </header>
+                    </div>
+                </section>
+            </section>
         </div>
 
-        <h2>제품 목록</h2>
-        <ul>
-            {% for product in products %}
-            <li>이름: {{ product.product_name }} - 가격: {{ product.price }} ₩ - 재고: {{ product.stock }}개</li>
-            <li>카테고리: 
-                {% with product_categories_dict|get_item:product.id as categories %}
-                    {{ categories|join:", " }}
-                {% endwith %}
-            {% endfor %}
-            </li>
-        </ul>
+        <!-- Footer -->
+			<div id="footer">
 
-        <h2>제품 추가</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ product_form.as_p }}
-            <button type="submit" name="create_product">Create Product</button>
-        </form>
+				<!-- Copyright -->
+					<ul class="copyright">
+						<p>&copy; 2024 Tshop. All rights reserved.</p>
+					</ul>
 
-        <h2>카테고리 추가</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ category_form.as_p }}
-            <button type="submit" name="create_category">Create Category</button>
-        </form>
-
-        <h2>상품에 카테고리 추가</h2>
-        <form method="post" action="{% url 'shop:business_dashboard' %}">
-            {% csrf_token %}
-            {{ product_category_form.as_p }}
-            <button type="submit" name="product_category">카테고리 추가</button>
-        </form>
-        
-        </form> 
-            <pre>
-
-
-            </pre>
-        </form>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Tshop. All rights reserved.</p>
-    </footer>
-</body>
+			</div>
+    </body>
 </html>

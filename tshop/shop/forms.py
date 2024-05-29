@@ -3,7 +3,7 @@ from .models import Customer, Business, Product, Category, ProductCategory, Addr
 
 ##Customer 회원가입
 class CustomerSignupForm(forms.ModelForm):
-    street_address = forms.CharField(max_length=225, required=True, label='거리 주소')
+    street_address = forms.CharField(max_length=225, required=True, label='도로명 주소')
     city = forms.CharField(max_length=45, required=True, label='도시')
     state = forms.CharField(max_length=45, required=True, label='주')
     country = forms.CharField(max_length=45, required=True, label='국가')
@@ -82,25 +82,33 @@ class BusinessSignupForm(forms.ModelForm):
 
 ##Customer 로그인
 class CustomerLoginForm(forms.Form):
-    user_id = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'User ID'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    user_id = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'User ID'}), label='사용자 ID')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}), label= '비밀번호')
 
 ##Business 로그인
 class BusinessLoginForm(forms.Form):
-    business_name = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Business Name'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    business_name = forms.CharField(max_length=45, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Business Name'}), label= '회사명')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}), label= '비밀번호')
 
 #Category
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['category_name']
+        lable = {
+            'category_name': '카테고리'
+        }
 
 #ProductForm
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['product_name', 'stock', 'price']
+        lable = {
+            'product_name': '판매자명',
+            'stock': '재고',
+            'price': '가격'
+        }
 
 #Category
 class ProductCategoryForm(forms.ModelForm):

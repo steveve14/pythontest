@@ -1,77 +1,106 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>SHOP</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'shop:index' %}" style="text-decoration:none;color:white;">SHOP</a></h1>
-        <nav>
-            <ul>
-                {% if is_customer_authenticated %}
-                    <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
-                    <li><a href="{% url 'shop:view_cart' %}">카트</a></li>
-                {% else %}
-                    {% if is_business_authenticated %}
-                        <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
-                        <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
-                        
-                    {% else %}
-                        <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
-                        <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
-                        <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
-                        <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
-                    {% endif %}
-                {% endif %}
+    <head>
+        <title>SHOP</title>
+        <meta charset="utf-8" />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+    </head>
+    <body>
+        <div id="header">
+            <div class="top">
+                <!-- Logo -->
+                    <div id="logo">
+                        <h1><a href="{% url 'shop:index' %}" id = 'logo'>SHOP</a></h1>
+                    </div>
 
-            </ul>
-        </nav>
-    </header>
-    
-    <main>
-        <section class="category-list">
-            <h2>Categories</h2>
-            <ul>
-                <li class="category-item">
-                    <a href="{% url 'shop:index' %}">전체</a>
-                </li>
-                {% for category in categories %}
-                <li class="category-item">
-                    <a href="?category={{ category.id }}">{{ category.category_name }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </section>
+                <!-- Nav -->
+                    <nav id="nav">
+                        <ul>
+                            {% if is_customer_authenticated %}
+                                <li><a href="{% url 'shop:view_cart' %}">카트</a></li>
+                                <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                            {% else %}
+                                {% if is_business_authenticated %}
+                                    <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                                    <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
+                                    
+                                {% else %}
+                                    <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                                    <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                                    <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                                    <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </nav>
 
-        <section>
-            <h2>Products</h2>
-            <div class="product-list">
-                {% for product in products %}
-                <div class="product-item">
-                    <h3>{{ product.product_name }}</h3>
-                    <p>가격: {{ product.price }}￦</p>
-                    <p>재고: {{ product.stock }}</p>
-                    {% if is_business_authenticated %}
-                    {% else %}
-                        {% if product.stock <= 0%}
-                        {%else%}
-                            <a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a>
-                        {% endif %}
-                    {% endif %}
-                </div>
-                {% endfor %}
+                    <nav id="nav">
+                        <div id="logo">
+                            <h2>Categories  </h2>
+                        </div>
+                            <ul>
+                                <li class="category-item">
+                                    <a href="{% url 'shop:index' %}">전체</a>
+                                </li>
+                                {% for category in categories %}
+                                <li class="category-item">
+                                    <a href="?category={{ category.id }}">{{ category.category_name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                    </nav>
             </div>
-            <pre>
+        </div>
+        
+        <div id="main">
+            <!-- Intro -->
+					<section id="top" class="one dark cover">
+						<div class="container">
+							<header>
+								<h2><a href="{% url 'shop:index' %}">SHOP</a></h2>
+							</header>
+						</div>
+					</section>
+            <!-- Portfolio -->
+					<section id="portfolio" class="two">
+						<div class="container">
+							<header>
+								<h2>Products</h2>
+							</header>
+                            <div class="row">
+                                <div >
+                                {% for product in products %}
+                                    <div class="product-item">
+                                        <article class="item">
+                                            <header>
+                                                <h1>{{ product.product_name }}</h1>
+                                                <h3>가격: {{ product.price }}￦</h3>
+                                                <h3>재고: {{ product.stock }}</h3>   
+                                                {% if is_business_authenticated %}
+                                                {% else %}
+                                                    {% if product.stock <= 0%}
+                                                    {%else%}
+                                                    <h1><a href="{% url 'shop:add_to_cart' product.id %}">Add to Cart</a></h1>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </header>
+                                        </article>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+						</div>
+					</section>
+        </div>
+        <!-- Footer -->
+			<div id="footer">
 
+				<!-- Copyright -->
+					<ul class="copyright">
+						<p>&copy; 2024 Tshop. All rights reserved.</p>
+					</ul>
 
-            </pre>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Tshop. All rights reserved.</p>
-    </footer>
-</body>
+			</div>
+    </body>
 </html>

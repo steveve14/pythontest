@@ -1,40 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Business_Login</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1><a href="{% url 'shop:index' %}" style="text-decoration:none;color:white;">SHOP</a></h1>
-        <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                    {% if user.is_business %}
-                        <li><a href="{% url 'shop:business_logout' %}">로그아웃</a></li>
+    <head>
+        <title>Business_Login</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'shop/styles.css' %}">
+    </head>
+    <body>
+        <div id="header">
+            <div class="top">
+                <!-- Logo -->
+                    <div id="logo">
+                        <h1><a href="{% url 'shop:index' %}" id = 'logo'>SHOP</a></h1>
+                    </div>
+                <!-- Nav -->
+                    <nav id="nav">
+                        <ul>
+                            {% if is_customer_authenticated %}
+                        <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                        <li><a href="{% url 'shop:view_cart' %}">카트</a></li>
                     {% else %}
-                        <li><a href="{% url 'shop:customer_logout' %}">로그아웃</a></li>
+                        {% if is_business_authenticated %}
+                            <li><a href="{% url 'shop:logout' %}">로그아웃</a></li>
+                            <li><a href="{% url 'shop:business_dashboard' %}">데쉬보드</a></li>
+                            
+                        {% else %}
+                            <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
+                            <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
+                            <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
+                            <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
+                        {% endif %}
                     {% endif %}
-                {% else %}
-                    <li><a href="{% url 'shop:customer_login' %}">로그인 &nbsp; </a></li>
-                    <li><a href="{% url 'shop:customer_signup' %}">회원가입 &nbsp; </a></li>
-                    <li><a href="{% url 'shop:business_login' %}">판매자 로그인 &nbsp; </a></li>
-                    <li><a href="{% url 'shop:business_signup' %}">판매자 회원가입 &nbsp; </a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+                        </ul>
+                    </nav>
+            </div>
+        </div>
+        <div id="main">
+            <!-- Intro -->
+                    <section id="top" class="one dark cover">
+                        <div class="container">
+                            <header>
+                                <h2>판매자 로그인</h2>
+                            </header>
+                        </div>
+                    </section>
+            <!-- Portfolio -->
+                    <section id="portfolio" class="two">
+                        <div class="container">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit">Login</button>
+                            </form>
+                        </div>
+                    </section>
+        </div>
+        
+         <!-- Footer -->
+			<div id="footer">
 
-    <h2>Business Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+				<!-- Copyright -->
+					<ul class="copyright">
+						<p>&copy; 2024 Tshop. All rights reserved.</p>
+					</ul>
 
-    <footer>
-        <p>&copy; 2024 Tshop. All rights reserved.</p>
-    </footer>
-</body>
+			</div>
+    </body>
 </html>
