@@ -80,14 +80,12 @@ form button:hover {
 .order-list,
 .product-list,
 .category-list {
-    display: inline;
     margin-bottom: 20px;
 }
 
 .order-item,
 .product-item,
 .category-item {
-    display: inline;
     background-color: #fff;
     margin-bottom: 10px;
     padding: 10px;
@@ -107,13 +105,12 @@ footer {
 }
 
 .product-list, .cart-list {
-    display: inline;
+    display: flex;
     flex-direction: column;
     align-items: center; /* 가운데 정렬 */
 }
 
 .product-item, .cart-item {
-    display: inline;
     background-color: #fff;
     margin-bottom: 10px;
     padding: 20px;
@@ -133,7 +130,7 @@ footer {
 }
 
 .product-item a, .cart-item a {
-    display: inline;
+    display: inline-block;
     color: #fff;
     text-decoration: none;
     background-color: #007bff;

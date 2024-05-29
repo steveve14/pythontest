@@ -3,16 +3,35 @@ from .models import Customer, Business, Product, Category, ProductCategory, Addr
 
 ##Customer 회원가입
 class CustomerSignupForm(forms.ModelForm):
-    street_address = forms.CharField(max_length=225, required=True)
-    city = forms.CharField(max_length=45, required=True)
-    state = forms.CharField(max_length=45, required=True)
-    country = forms.CharField(max_length=45, required=True)
-    postal_code = forms.CharField(max_length=20, required=True)
-    password = forms.CharField(widget=forms.PasswordInput())
+    street_address = forms.CharField(max_length=225, required=True, label='거리 주소')
+    city = forms.CharField(max_length=45, required=True, label='도시')
+    state = forms.CharField(max_length=45, required=True, label='주')
+    country = forms.CharField(max_length=45, required=True, label='국가')
+    postal_code = forms.CharField(max_length=20, required=True, label='우편번호')
+    password = forms.CharField(widget=forms.PasswordInput(), label='비밀번호')
+    password_confirm = forms.CharField(widget=forms.PasswordInput(), label='비밀번호 확인')
 
     class Meta:
         model = Customer
-        fields = ['name', 'age', 'phone_number', 'user_id', 'password']
+        fields = ['name', 'age', 'phone_number', 'user_id', 'password', 'password_confirm']
+        labels = {
+            'name': '이름',
+            'age': '나이',
+            'phone_number': '전화번호',
+            'user_id': '사용자 ID'
+        }
+
+    def clean(self):
+        # 부모 클래스의 clean() 메소드 호출
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+
+        # 비밀번호와 비밀번호 확인이 일치하지 않으면 ValidationError 발생
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError("비밀번호가 일치하지 않습니다.")
+        return cleaned_data
+
 
     def save(self, commit=True):
         customer = super().save(commit=False)

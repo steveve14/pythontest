@@ -25,11 +25,11 @@
         <section>
             <h2>Current Address</h2>
             {% if address %}
-                <p>Street Address: {{ address.street_address }}</p>
-                <p>City: {{ address.city }}</p>
-                <p>State: {{ address.state }}</p>
-                <p>Country: {{ address.country }}</p>
-                <p>Postal Code: {{ address.postal_code }}</p>
+                <p>거리 주소: {{ address.street_address }}</p>
+                <p>도시: {{ address.city }}</p>
+                <p>주: {{ address.state }}</p>
+                <p>국가: {{ address.country }}</p>
+                <p>우편번호: {{ address.postal_code }}</p>
             {% else %}
                 <p>No address available.</p>
             {% endif %}

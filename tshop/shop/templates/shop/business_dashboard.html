@@ -25,6 +25,14 @@
                 <p>제품명: {{ order.product.product_name }}</p>
                 <p>갯수: {{ order.quantity }}</p>
                 <p>주문일: {{ order.order_date }}</p>
+
+                <div class="customer-address">
+                    <p>주소:</p>
+                    <p>{{ order.customer.address.street_address }}</p>
+                    <p>{{ order.customer.address.city }}, {{ order.customer.address.state }}</p>
+                    <p>{{ order.customer.address.country }}, {{ order.customer.address.postal_code }}</p>
+                </div>
+
             </div>
             {% endfor %}
         </div>
